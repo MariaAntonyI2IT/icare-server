@@ -1,0 +1,27 @@
+server:
+  #  servlet:
+  #     #contextPath: /auth-service
+  #     contextPath: /
+  port: 8089
+
+#DB Config
+spring:
+  application:
+    name: auth-service
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/icare?serverTimezone=UTC
+    username : postgres
+    password : postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true
+
+app:
+  public-key: public_key.der
+  private-key: private_key.der
