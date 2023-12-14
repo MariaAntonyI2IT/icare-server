@@ -22,5 +22,7 @@ object Constants {
     const val RSA = "RSA"
     const val TOKEN = "token"
     const val TOKEN_EXPIRE_TIME = "token_expire_time"
+    const val OTP = "otp"
+
 
 }
