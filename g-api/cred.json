@@ -1,0 +1,11 @@
+{
+  "installed": {
+    "client_id": "881423980708-5o89l5looegrhq8pccoelijf4o1f7a71.apps.googleusercontent.com",
+    "project_id": "icare-407616",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "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",
+    "redirect_uris": ["http://localhost"]
+  }
+}

@@ -25,4 +25,34 @@ object Constants {
     const val OTP = "otp"
 
 
+    const val TABLE_ROLE = "role"
+    const val TABLE_USER = "user"
+
+    const val FIELD_NGO_ID = "ngo_id"
+    const val FIELD_REGISTRATION_NUMBER = "registration_number"
+    const val FIELD_STATE = "state"
+    const val FIELD_CITY = "city"
+    const val FIELD_ADDRESS = "address"
+    const val FIELD_PHONE_NUMBER = "phone_number"
+    const val FIELD_AVATAR = "avatar"
+    const val EMAIL = "email"
+    const val ROLE_ORG_USER = "ORG-USER"
+    const val DESCRIPTION = "description"
+    const val TAG = "tag"
+    const val STATUS = "status"
+    const val RAISED_DATE = "raised_date"
+    const val ORGANIZATION_ID = "organization_id"
+    const val TABLE_PRODUCT = "product"
+    const val QUANTITY = "quantity"
+    const val UNIT = "unit"
+    const val ORDER_PLATFORM = "order_platform"
+    const val IS_ORDER_COMPLETED = "is_order_completed"
+    const val ORDER_BY = "order_by"
+    const val ORDER_DATE = "order_date"
+    const val IS_ACKNOWLEDGED = "is_acknowledged"
+
+    const val ROLE_CONTRIBUTOR = "CONTRIBUTOR";
+    const val ROLE_ORGANIZATION = "ORGANIZATION";
+    const val TABLE_ORGANIZATION = "organization";
+    const val TABLE_CONTRIBUTOR = "contributor"
 }
