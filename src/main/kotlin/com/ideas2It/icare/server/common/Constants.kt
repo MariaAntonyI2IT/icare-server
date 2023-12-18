@@ -47,12 +47,17 @@ object Constants {
     const val UNIT = "unit"
     const val ORDER_PLATFORM = "order_platform"
     const val IS_ORDER_COMPLETED = "is_order_completed"
-    const val ORDER_BY = "order_by"
-    const val ORDER_DATE = "order_date"
+    const val ORDER_BY = "contributed_by"
+    const val ORDER_DATE = "contributed_date"
     const val IS_ACKNOWLEDGED = "is_acknowledged"
 
     const val ROLE_CONTRIBUTOR = "CONTRIBUTOR";
     const val ROLE_ORGANIZATION = "ORGANIZATION";
     const val TABLE_ORGANIZATION = "organization";
     const val TABLE_CONTRIBUTOR = "contributor"
+    const val REQUEST_ID = "request_id"
+
+    const val LINK = "link"
+    const val TYPE = "type"
+    const val ORDER_ID = "order_id"
 }

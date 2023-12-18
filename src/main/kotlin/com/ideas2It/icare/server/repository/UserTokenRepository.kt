@@ -10,6 +10,4 @@ import org.springframework.stereotype.Repository
 interface UserTokenRepository: JpaRepository<UserToken, Long> {
 
     fun findByToken(token: String?) : UserToken?
-    
-    fun findByName(name: String?):Role
 }

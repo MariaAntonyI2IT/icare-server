@@ -22,21 +22,24 @@ class AuthFilter : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val requestUri = request.requestURI
-        println(request.requestURI)
-        val token = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (null == token || token.isBlank()) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized Access")
+        if (!isOpenUri(requestUri)) {
+            println(request.requestURI)
+            val token = request.getHeader(HttpHeaders.AUTHORIZATION)
+            if (null == token || token.isBlank()) {
+                throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized Access")
+            }
+            val userToken = userTokenRepository.findByToken(token)
+            if (null == userToken) {
+                throw ExpiredJwtException(null, null, "Token expired")
+            } else if (userToken.tokenExpireTime?.after(Date()) == true) {
+                userToken.tokenExpireTime = addMinutesToCurrentDate(60)
+                userTokenRepository.save(userToken)
+            } else {
+                throw ExpiredJwtException(null, null, "Token expired")
+            }
         }
-        val userToken = userTokenRepository.findByToken(token)
-        if (null == userToken) {
-            throw ExpiredJwtException(null,null, "Token expired")
-        } else if (userToken.tokenExpireTime?.after(Date()) == true){
-            userToken.tokenExpireTime = addMinutesToCurrentDate(60)
-            userTokenRepository.save(userToken)
-        } else {
-            throw ExpiredJwtException(null,null, "Token expired")
-        }
-        filterChain.doFilter(request,response)
+        filterChain.doFilter(request, response)
+
     }
 
     private fun addMinutesToCurrentDate(minutes: Int): Date {
@@ -45,6 +48,20 @@ class AuthFilter : OncePerRequestFilter() {
         cal.time = date
         cal.add(Calendar.MINUTE, minutes)
         return cal.time
+    }
+
+    private fun isOpenUri(uri: String): Boolean {
+        if (uri.contains("/login/oAuth")
+            || uri.contains("/email/send-otp")
+            || uri.contains("/email/validate-otp")
+            || uri.contains("/check")
+            || uri.contains("/request-list")
+            || uri.contains("/organization/verify-org-id")
+            || uri.contains("/organization/register")
+            || uri.contains("/contributor/register")) {
+            return true
+        }
+        return false
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ideas2It.icare.server.model.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.ideas2It.icare.server.common.Constants
 import jakarta.persistence.*
 
@@ -22,6 +23,7 @@ public data class Contributor(
     @Column(name = Constants.EMAIL)
     var email : String = "",
 
+    @JsonIgnore
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = Constants.USER_ID)
     var user: User = User()

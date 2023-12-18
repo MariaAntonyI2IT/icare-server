@@ -36,16 +36,17 @@ class OrganizationServiceImpl(
     private var orgIdPrefix: String = "IC-"
 ) : OrganizationService {
 
-    override fun verifyNgoId(request: RegistrationRequestDTO): ResponseDTO {
-        if (isOrganizationExist(request.ngoId)) {
+    override fun verifyNgoId(ngoId: String): ResponseDTO {
+        if (isOrganizationExist(ngoId)) {
             return ResponseDTO("Organization already exists", null, HttpStatus.NOT_ACCEPTABLE)
         }
 
-        val organizationDetails = getVerifiedOrganization(request.ngoId)
+        val organizationDetails = getVerifiedOrganization(ngoId)
+        println("=================" + organizationDetails)
         if (organizationDetails.isEmpty()) {
             return ResponseDTO("Your Organization is not an verified Organization", null, HttpStatus.NOT_ACCEPTABLE)
         }
-        organizationDetails.set("UserId", orgIdPrefix + (organizationDetails.get("ngoId")?.takeLast(4)))
+        organizationDetails.set("userId", orgIdPrefix + (organizationDetails.get("ngoId")?.takeLast(4)))
 
         return ResponseDTO(" Organization verification completed. Please note the User Id.", organizationDetails, HttpStatus.OK)
     }
@@ -61,7 +62,7 @@ class OrganizationServiceImpl(
 //        var data = getData("1S71EpkQUG4xnwE-lui91AbhBwVYEbwIcbobHDmQf-Xs", "Darpan_Organization_data", "A:B")
 //        var data = getData("1G1oyIM_x0IUu6q-9AMlZLaZ4651oRVCQ5g7TPi9OkFQ", "Sheet1", "A2:B2")
 
-        val data = getData("1cNHhS3ysx3ssmV4GvCN8cjp7bLmF9GNmfOlHRK_rXvA", "Sheet1", "A:B")
+        val data = getData("1cNHhS3ysx3ssmV4GvCN8cjp7bLmF9GNmfOlHRK_rXvA", "Sheet1", "A:H")
         for (row in data) {
             formattedData[row.get("ngoId") as String] = row;
         }
@@ -73,13 +74,13 @@ class OrganizationServiceImpl(
     }
 
     override fun registerOraganization(organizationRequest: RegistrationRequestDTO): ResponseDTO {
-        val role: Role = roleService.findRoleByName(Constants.ROLE_ORGANIZATION);
+        val role: Role = roleService.findRoleByName(Constants.ROLE_ORG_USER);
         val userByUserName = userRepository.findByUsername(organizationRequest.username)
         if (null != userByUserName) {
             return ResponseDTO("Organization already exists with same User ID", null, HttpStatus.NOT_ACCEPTABLE)
         }
         println(role)
-        val user: User = User("", "",organizationRequest.username, organizationRequest.password, role);
+        val user: User = User(organizationRequest.username.lowercase(), organizationRequest.password, role);
         println(user)
         val organization: Organization = organizationRequest.toOrganization()
         organization.user = user

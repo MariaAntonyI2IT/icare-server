@@ -39,7 +39,7 @@ class ContributorServiceImpl(
             return ResponseDTO("An Contributor already exists with same email ID", null, HttpStatus.NOT_ACCEPTABLE)
         }
         val role: Role = roleService.findRoleByName(Constants.ROLE_CONTRIBUTOR);
-        val user: User = User("","", request.username, request.password, role);
+        val user: User = User(request.username, request.password, role);
         val contributor: Contributor = request.toContributor();
         contributor.user = user
         return ResponseDTO("Contributor Registered Successfully", contributorRepository.save(contributor), HttpStatus.OK)

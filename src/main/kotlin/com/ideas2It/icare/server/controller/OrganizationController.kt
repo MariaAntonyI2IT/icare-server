@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/organization")
 class OrganizationController(private val organizationService: OrganizationService) {
 
-    @GetMapping("/verify-org-id/{ngoId}")
-    fun verifyNgoId(@RequestBody request: RegistrationRequestDTO): ResponseEntity<Any>? {
-        val responseDTO: ResponseDTO = organizationService.verifyNgoId(request);
-        return ResponseEntity(responseDTO, responseDTO.httpStatus);
+    @GetMapping("/verify-org-id")
+    fun verifyNgoId(@RequestParam("ngoId") ngoId: String): ResponseEntity<Any>? {
+        val responseDTO: ResponseDTO = organizationService.verifyNgoId(ngoId);
+        return ResponseEntity(responseDTO.entity, responseDTO.httpStatus);
     }
 
     @PostMapping("/register")
     fun registerOrganization(@RequestBody request: RegistrationRequestDTO): ResponseEntity<Any>? {
         val responseDTO: ResponseDTO = organizationService.registerOraganization(request);
-        return ResponseEntity(responseDTO, HttpStatus.OK);
+        return ResponseEntity(responseDTO.entity, HttpStatus.OK);
     }
 
 }

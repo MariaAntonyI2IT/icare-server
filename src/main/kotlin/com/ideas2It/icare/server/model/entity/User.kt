@@ -16,12 +16,6 @@ import java.io.Serializable
 @Table(name = "\"user\"")
 data class User(
 
-        @Column(name = Constants.FIRST_NAME)
-        val firstName : String = "",
-
-        @Column(name = Constants.LAST_NAME)
-        val lastName : String = "",
-
         @Column(name = Constants.USERNAME)
         private val username: String = "",
 
@@ -35,6 +29,7 @@ data class User(
         val role: Role = Role()
 ) : BaseEntity(), Serializable, UserDetails {
 
+    @JsonIgnore
     override fun getAuthorities(): Set<GrantedAuthority> {
         val authorities: MutableSet<GrantedAuthority> = LinkedHashSet()
         authorities.add(role)

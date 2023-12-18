@@ -39,4 +39,6 @@ open class BaseEntity: Serializable {
     @Column(name = Constants.IS_ACTIVE)
     val isActive : Boolean = true
 
+
+
 }

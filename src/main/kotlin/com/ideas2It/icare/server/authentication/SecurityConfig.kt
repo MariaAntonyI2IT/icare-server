@@ -1,6 +1,6 @@
 package com.ideas2It.icare.server.authentication
 
-import com.ideas2It.icare.server.filter.AuthFilter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -11,16 +11,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
+
+    @Value("\${cors.allowedMethods}")
+    private lateinit var allowedMethods: String
+
+    @Value("\${cors.allowedHeaders}")
+    private lateinit var allowedHeaders: String
+
+    @Value("\${cors.corsConfiguration}")
+    private lateinit var corsConfiguration: String
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -43,14 +51,18 @@ class SecurityConfig {
     }
 
     @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.allowCredentials = true
-        config.addAllowedOriginPattern("*")
-        config.addAllowedHeader("*")
-        source.registerCorsConfiguration("/**", config)
-        return source
+    fun failureHandler() : LoginFailure {
+        return LoginFailure()
+    }
+
+
+    @Bean
+    fun corsConfigurer() : WebMvcConfigurer {
+        return object : WebMvcConfigurer{
+            override fun addCorsMappings(configuration : CorsRegistry) {
+                configuration.addMapping(corsConfiguration).allowedHeaders(allowedHeaders).allowedMethods(allowedMethods).exposedHeaders("*")
+            }
+        }
     }
 
     @Bean
@@ -62,7 +74,7 @@ class SecurityConfig {
                 .formLogin { form ->
                     form
                             .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
-                            .successHandler(authenticationSuccess())
+                            .successHandler(authenticationSuccess()).failureHandler(failureHandler())
                 }
                 .exceptionHandling { exception ->
                     exception.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

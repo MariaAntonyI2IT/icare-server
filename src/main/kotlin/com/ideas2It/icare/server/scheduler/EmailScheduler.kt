@@ -17,7 +17,6 @@ open class EmailScheduler {
 
   //  @Scheduled(fixedDelay = 10000)
     fun emailScheduler(): Unit {
-        println("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
         val mails: List<OutBoundEmail> = emailService.getOutBoundEmails()
         println("mails $mails")
         val emailsListToUpdate: MutableList<OutBoundEmail> = ArrayList<OutBoundEmail>()

@@ -9,18 +9,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("email")
+@RequestMapping("/email")
 class EmailController(private val emailService: EmailService) {
 
-    @GetMapping("send-otp")
-    fun sendOtp(@RequestBody loginRequestDTO: LoginRequestDTO?) : ResponseEntity<Map<String, String>> {
-        val randomPin = emailService.saveEmail(loginRequestDTO)
-        return ResponseEntity.ok().body(mapOf("message" to "OTP sent successfully"))
+    @PostMapping("/send-otp")
+    fun sendOtp(@RequestBody loginRequestDTO: LoginRequestDTO?) : ResponseEntity<Any> {
+        return emailService.saveEmail(loginRequestDTO)
+//        return ResponseEntity.ok().body(mapOf("message" to "OTP sent successfully"))
     }
 
-    @GetMapping("validate-otp")
-    fun validateOtp(@RequestBody otpDto: OtpDTO?) : ResponseEntity<Map<String, String>> {
-        emailService.validateOtp(otpDto)
-        return ResponseEntity.ok().body(mapOf("message" to "OTP is validated"))
+    @PostMapping("/validate-otp")
+    fun validateOtp(@RequestBody otpDto: OtpDTO?) : ResponseEntity<Any> {
+        return emailService.validateOtp(otpDto)
+//        return ResponseEntity.ok().body(mapOf("message" to "OTP is validated"))
     }
 }

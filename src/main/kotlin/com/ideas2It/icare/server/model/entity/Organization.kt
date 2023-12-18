@@ -1,5 +1,6 @@
 package com.ideas2It.icare.server.model.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.ideas2It.icare.server.common.Constants
 import jakarta.persistence.*
 
@@ -30,6 +31,7 @@ public data class Organization (
     @Column(name = Constants.FIELD_PHONE_NUMBER)
     val phoneNumber: String? = null,
 
+    @JsonIgnore
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = Constants.USER_ID)
     var user: User = User()

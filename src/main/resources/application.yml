@@ -25,3 +25,11 @@ spring:
 app:
   public-key: public_key.der
   private-key: private_key.der
+
+cors:
+  allowedOrigin: '*'
+  allowedMethods: '*'
+  allowedHeaders: '*'
+  allowedCredentials: false
+  exposeHeaders: '*'
+  corsConfiguration: '/**'

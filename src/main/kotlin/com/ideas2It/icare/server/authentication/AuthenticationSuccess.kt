@@ -1,6 +1,7 @@
 package com.ideas2It.icare.server.authentication
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ideas2It.icare.server.common.CommonUtil
 import com.ideas2It.icare.server.common.Constants
 import com.ideas2It.icare.server.model.dto.UserDTO
 import com.ideas2It.icare.server.model.entity.User
@@ -30,11 +31,11 @@ import java.util.*
 
 class AuthenticationSuccess() : SimpleUrlAuthenticationSuccessHandler() {
 
-    @Value("\${app.public-key}")
-    private lateinit var publicKey: String
-
     @Autowired
     private lateinit var userTokenRepository: UserTokenRepository
+
+    @Autowired
+    private lateinit var commonUtil: CommonUtil
 
     override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
         if (response != null) {
@@ -42,12 +43,13 @@ class AuthenticationSuccess() : SimpleUrlAuthenticationSuccessHandler() {
                 try {
                     val userDTO = getLogInUser()
                     if (userDTO != null) {
-                        val userData = mapOf("username" to (userDTO.username), "name" to (userDTO.firstName), "role" to (userDTO.role.name))
-                        val token = tokenCreation(userData)
+                        val userData = mapOf("username" to (userDTO.username), "id" to (userDTO.id),"role" to (userDTO.role))
+                        val token = commonUtil.tokenCreation(userData)
                         response.setHeader("Authorization", token)
+                        response.contentType = "application/json;charset=UTF-8"
                         val objectWriter = ObjectMapper().writer().withDefaultPrettyPrinter()
                         response.writer.write(objectWriter.writeValueAsString(userDTO))
-                        userTokenRepository.save(UserToken(token, addMinutesToCurrentDate(120)))
+                        userTokenRepository.save(UserToken(token, commonUtil.addMinutesToCurrentDate(120)))
                     } else {
                         response.writer.write("{ \"error\": \"Invalid User\"}")
                     }
@@ -60,6 +62,7 @@ class AuthenticationSuccess() : SimpleUrlAuthenticationSuccessHandler() {
     }
 
     fun getLogInUser(): UserDTO? {
+        println("getting login user")
         val authentication = SecurityContextHolder.getContext()?.authentication
         if (authentication == null || authentication.principal == null) {
             return null
@@ -68,42 +71,11 @@ class AuthenticationSuccess() : SimpleUrlAuthenticationSuccessHandler() {
             return null
         }
         val principal = authentication.principal as User
+        println(principal)
         val userDTO : UserDTO = UserDTO()
-        userDTO.firstName = principal.firstName
-        userDTO.lastName = principal.lastName
+        userDTO.id = principal.id!!
         userDTO.username = principal.username
-        userDTO.role = principal.role
+        userDTO.role = principal.role.name.toString()
         return userDTO
     }
-
-    private fun addMinutesToCurrentDate(minutes: Int): Date {
-        val date = Date()
-        val cal = Calendar.getInstance()
-        cal.time = date
-        cal.add(Calendar.MINUTE, minutes)
-        return cal.time
-    }
-
-    private fun getRsaPublicKey(): RSAPublicKey {
-        val publicKeyResource = ClassPathResource(publicKey)
-        val bdata = FileCopyUtils.copyToByteArray(publicKeyResource.inputStream)
-        val spec = X509EncodedKeySpec(bdata)
-        val kf = KeyFactory.getInstance(Constants.RSA)
-        val publicRsaKey: RSAPublicKey = kf.generatePublic(spec) as RSAPublicKey
-        return publicRsaKey
-    }
-
-    private fun tokenCreation(userData: Map<String, String?>): String {
-        val jwt = JWTClaimsSet.Builder()
-        jwt.issuer("")
-        jwt.claim("userdata", userData)
-        jwt.expirationTime(addMinutesToCurrentDate(120))
-        jwt.jwtID(UUID.randomUUID().toString())
-        val header = JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM)
-        val encrypter = RSAEncrypter(getRsaPublicKey())
-        val encryptedJWT = EncryptedJWT(header, jwt.build())
-        encryptedJWT.encrypt(encrypter)
-        return encryptedJWT.serialize().toString()
-    }
-
 }

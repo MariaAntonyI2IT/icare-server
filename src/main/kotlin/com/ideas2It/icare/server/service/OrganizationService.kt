@@ -5,7 +5,7 @@ import com.ideas2It.icare.server.model.dto.ResponseDTO
 
 
 interface OrganizationService {
-    fun verifyNgoId(request: RegistrationRequestDTO): ResponseDTO
+    fun verifyNgoId(request: String): ResponseDTO
 
     fun registerOraganization(organizationRequest: RegistrationRequestDTO): ResponseDTO
 

@@ -14,9 +14,10 @@ class AuthenticationProvider() : AuthenticationProvider {
     private lateinit var userRepository: UserRepository
 
     override fun authenticate(authentication: Authentication?): Authentication {
+        println("auth provider")
         val username: String? = (authentication?.principal as? String)?.lowercase()
         val password :String? = authentication?.credentials as? String
-        val user = userRepository.findByUsernameAndIsDeletedFalse(username)
+        val user = userRepository.findByUsernameAndIsDeletedFalse(username?.lowercase())
         if (user?.password != null && user.password.equals(password)) {
             val authorities = user.authorities
             return UsernamePasswordAuthenticationToken(user, password, authorities)
