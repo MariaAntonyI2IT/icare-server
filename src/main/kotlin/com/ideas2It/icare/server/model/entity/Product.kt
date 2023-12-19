@@ -47,4 +47,7 @@ class Product: BaseEntity() {
     @Column(name = Constants.REQUEST_ID)
     val requestId: Long? = null
 
+    @Column(name = Constants.CATEGORY)
+    val category: String? = null
+
 }

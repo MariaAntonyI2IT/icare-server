@@ -58,7 +58,8 @@ class AuthFilter : OncePerRequestFilter() {
             || uri.contains("/request-list")
             || uri.contains("/organization/verify-org-id")
             || uri.contains("/organization/register")
-            || uri.contains("/contributor/register")) {
+            || uri.contains("/contributor/register")
+                || uri.contains("/request-list")) {
             return true
         }
         return false

@@ -60,4 +60,5 @@ object Constants {
     const val LINK = "link"
     const val TYPE = "type"
     const val ORDER_ID = "order_id"
+    const val CATEGORY = "category"
 }

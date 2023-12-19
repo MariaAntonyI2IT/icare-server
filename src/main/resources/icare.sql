@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public.role
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     is_active boolean DEFAULT true,
     is_deleted boolean DEFAULT false
-    );
+   );
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -112,6 +112,7 @@ CREATE TABLE product(
     is_acknowledged boolean,
     link varchar,
     order_id varchar,
+    category varchar,
     request_id bigint, FOREIGN KEY (request_id) REFERENCES organization_request(id),
     created_by bigint,
     updated_by bigint,
