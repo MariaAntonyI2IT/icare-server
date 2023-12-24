@@ -2,7 +2,7 @@ server:
   #  servlet:
   #     #contextPath: /auth-service
   #     contextPath: /
-  port: 8089
+  port: 8080
 
 #DB Config
 spring:
@@ -13,9 +13,9 @@ spring:
     allow-circular-references: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/icare?serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5454/icare?serverTimezone=UTC
     username : postgres
-    password : postgres
+    password : root
   jpa:
     properties:
       hibernate:

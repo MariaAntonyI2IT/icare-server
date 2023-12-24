@@ -39,17 +39,19 @@ class UserServiceImpl(
         val restTemplate = RestTemplate()
         try {
             val responseEntity: ResponseEntity<String> = restTemplate.exchange(requestEntity, String::class.java)
+            println(responseEntity.body)
             if (responseEntity.statusCode.is2xxSuccessful) {
                 val userProfile = responseEntity.body
                 if (userProfile != null) {
                     val objectMapper = ObjectMapper()
                     val userData = objectMapper.readValue(userProfile, Map::class.java)
+                    println("user data" + userData)
                     token = createOAuthUserAndGenerateToken(userData)
                     userTokenRepository.save(UserToken(token, commonUtil.addMinutesToCurrentDate(120)))
                 }
             }
         } catch (e: Exception) {
-            println("Exception during Google Profile API call: ${e.message}")
+            println("Exception during Google Profile API call: ${e}")
         }
         return token
     }
@@ -73,6 +75,7 @@ class UserServiceImpl(
             contributor.user = newuser
             user = newuser
             contributor = contributorRepository.save(contributor)
+
         }
 
         token = commonUtil.tokenCreation(mapOf("username" to (user.username), "id" to (user.id),"role" to (user.role.name)))

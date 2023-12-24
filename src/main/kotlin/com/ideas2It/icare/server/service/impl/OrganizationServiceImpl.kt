@@ -24,6 +24,7 @@ import com.ideas2It.icare.server.service.RoleService
 import org.apache.coyote.BadRequestException
 import org.apache.poi.ss.usermodel.*
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException.BadRequest
 import java.io.*
@@ -36,19 +37,19 @@ class OrganizationServiceImpl(
     private var orgIdPrefix: String = "IC-"
 ) : OrganizationService {
 
-    override fun verifyNgoId(ngoId: String): ResponseDTO {
+    override fun verifyNgoId(ngoId: String): ResponseEntity<Any> {
         if (isOrganizationExist(ngoId)) {
-            return ResponseDTO("Organization already exists", null, HttpStatus.NOT_ACCEPTABLE)
+            return ResponseEntity(mapOf("message" to "Organization already exists"), HttpStatus.NOT_ACCEPTABLE)
         }
 
         val organizationDetails = getVerifiedOrganization(ngoId)
         println("=================" + organizationDetails)
         if (organizationDetails.isEmpty()) {
-            return ResponseDTO("Your Organization is not an verified Organization", null, HttpStatus.NOT_ACCEPTABLE)
+            return ResponseEntity(mapOf("message" to "Your Organization is not an verified Organization"), HttpStatus.NOT_ACCEPTABLE)
         }
         organizationDetails.set("userId", orgIdPrefix + (organizationDetails.get("ngoId")?.takeLast(4)))
 
-        return ResponseDTO(" Organization verification completed. Please note the User Id.", organizationDetails, HttpStatus.OK)
+        return ResponseEntity(organizationDetails, HttpStatus.OK)
     }
 
     private fun isOrganizationExist(ngoId: String): Boolean {

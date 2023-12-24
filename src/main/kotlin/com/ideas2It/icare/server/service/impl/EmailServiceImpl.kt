@@ -96,12 +96,11 @@ class EmailServiceImpl : EmailService {
         val personalization = Personalization()
         personalization.addTo(Email(outBoundEmail.toAddress))
         mail.addPersonalization(personalization)
-        val sendGrid = SendGrid("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")
+        val sendGrid = SendGrid("")
         val request = Request()
         request.method = Method.POST
         request.endpoint = "mail/send"
         request.body = mail.build()
         val response = sendGrid.api(request)
     }
-
 }
